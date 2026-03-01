@@ -1,0 +1,20 @@
+    498 0000
+     73 
+     60 SATA
+     55 Deactivated
+     35 target
+     31 -
+     26 /usr/share/secureboot/updates/dbx/dbxupdate_arm64.bin
+     19 type=1400
+     19 features
+     18 0
+     17 on
+     16 Registered
+     15 X.509
+     13 Starting
+     11 Listening
+     10 registered
+      8 sysstat-collect.service
+      8 hash
+      8 Loading
+      7 PPTT

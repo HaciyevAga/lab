@@ -1,0 +1,5 @@
+[2026-03-01_15:25:59] common.sh initialized from aga
+[2026-03-01_15:26:32] Matched files: 0 (dir=/home/aga/lab7/demo pattern=*.log older_than=0)
+[2026-03-01_15:28:04] Backup created and verified: /home/aga/lab7-outputs/lab7-20260301-152804.tgz
+[2026-03-01_15:29:24] Matched files: 0 (dir=/home/aga/lab7/demo pattern=*.log older_than=0)
+[2026-03-01_15:29:29] Backup created and verified: /home/aga/lab7-outputs/lab7-20260301-152929.tgz
