@@ -1,0 +1,79 @@
+version: "3.9"
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Notes Application – Docker Compose Stack
+# Services: frontend (React) · backend (Node/Express) · postgres
+# ──────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  # ── PostgreSQL database ────────────────────────────────────────────────────
+  postgres:
+    image: postgres:15-alpine
+    container_name: notes_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: notes_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - notes_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d notes_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Node.js / Express backend ──────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend       # points to backend/ folder → uses backend/Dockerfile
+    container_name: notes_backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/notes_db
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: notes_db
+      DB_USER: postgres
+      DB_PASSWORD: password
+    ports:
+      - "3001:3001"
+    networks:
+      - notes_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ── React frontend ─────────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend      # points to frontend/ folder → uses frontend/Dockerfile
+      args:
+        REACT_APP_API_URL: http://localhost:3001
+    container_name: notes_frontend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    networks:
+      - notes_network
+    depends_on:
+      - backend
+
+# ── Named volume ───────────────────────────────────────────────────────────────
+volumes:
+  postgres_data:
+    driver: local
+
+# ── User-defined bridge network ────────────────────────────────────────────────
+networks:
+  notes_network:
+    driver: bridge
